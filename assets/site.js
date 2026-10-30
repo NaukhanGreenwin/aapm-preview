@@ -13,6 +13,15 @@
     els.forEach(function(el){io.observe(el)});
   }else{els.forEach(show)}
   setTimeout(function(){els.forEach(show)},2500);
+  // stagger siblings in grids
+  els.forEach(function(el){var p=el.parentNode,i=[].indexOf.call(p.children,el);if(i>0&&i<8)el.style.transitionDelay=(i*70)+'ms'});
+  // team photo strip (phones): start centred on the group
+  [].forEach.call(document.querySelectorAll('[data-scrollx]'),function(f){
+    function c(){if(f.scrollWidth>f.clientWidth+4)f.scrollLeft=(f.scrollWidth-f.clientWidth)/2}
+    var im=f.querySelector('img'),done=false;function g(){if(done||!im||!im.complete||getComputedStyle(f).overflowX!=='auto')return;var m=f.scrollWidth-f.clientWidth;if(m<5||m>3*f.clientWidth)return;c();if(f.scrollLeft>0)done=true}
+    if(im)im.addEventListener('load',g);window.addEventListener('load',g);g();setTimeout(g,400);setTimeout(g,1200);setTimeout(g,2500);var lw=innerWidth;window.addEventListener('resize',function(){if(innerWidth!==lw){lw=innerWidth;done=false;g()}});
+    f.addEventListener('touchstart',function(){done=true},{passive:true});
+  });
   // demo forms
   var t=document.getElementById('toast'),tt;
   function toast(m){if(!t)return;t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true},5000)}
